@@ -18,10 +18,13 @@ body {
 }
 
 .card {
-    transform: rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg));
-    transition: transform 0.1s ease-out;
+    position: relative;
+    height: 28rem;
+    width: 20rem;
+    aspect-ratio: 5/7;
+    color: #ffffff;
+    perspective: 50rem;
 }
-
 .card .shadow {
     position: absolute;
     inset: 0;

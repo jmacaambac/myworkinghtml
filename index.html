@@ -18,12 +18,8 @@ body {
 }
 
 .card {
-    position: relative;
-    height: 28rem;
-    width: 20rem;
-    aspect-ratio: 5/7;
-    color: #ffffff;
-    perspective: 50rem;
+    transform: rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg));
+    transition: transform 0.1s ease-out;
 }
 
 .card .shadow {
@@ -93,20 +89,12 @@ body {
   </style>
  <script>
 const angle = 20;
-const rotateCard = window;
-
-const lerp = (start, end, amount) => {
-    return (1 - amount) * start + amount * end;
-};
-
-const remap = (value, oldMax, newMax) => {
-    const newValue = ((value * oldMax) + (newMax * 2)) / (oldMax * 2) - newMax;
-    return Math.min(Math.max(newValue, -newMax), newMax);
-};
+const lerp = (start, end, amount) => (1 - amount) * start + amount * end;
+const remap = (value, oldMax, newMax) => Math.min(Math.max(((value * oldMax) + (newMax * 2)) / (oldMax * 2) - newMax, -newMax), newMax);
 
 let cards = [];
 
-window.addEventListener("DOMContentLoaded", (event) => {
+window.addEventListener("DOMContentLoaded", () => {
     cards = document.querySelectorAll(".card");
     cards.forEach((e) => {
         e.addEventListener("mousemove", (event) => {
@@ -121,7 +109,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             e.dataset.rotateY = -y;
         });
 
-        e.addEventListener("mouseout", (event) => {
+        e.addEventListener("mouseout", () => {
             e.dataset.rotateX = 0;
             e.dataset.rotateY = 0;
         });
@@ -132,18 +120,14 @@ const update = () => {
     cards.forEach((e) => {
         let currentX = parseFloat(e.style.getPropertyValue("--rotateY") || "0");
         let currentY = parseFloat(e.style.getPropertyValue("--rotateX") || "0");
-
-        const x = lerp(currentX, e.dataset.rotateX, 0.85);
-        const y = lerp(currentY, e.dataset.rotateY, 0.85);
-
-        e.style.setProperty("--rotateY", x + "deg");
-        e.style.setProperty("--rotateX", y + "deg");
+        const x = lerp(currentX, e.dataset.rotateX || 0, 0.85);
+        const y = lerp(currentY, e.dataset.rotateY || 0, 0.85);
+        e.style.setProperty("--rotateY", `${x}deg`);
+        e.style.setProperty("--rotateX", `${y}deg`);
     });
 };
 
-setInterval(() => {
-    if (cards.length > 0) update();
-}, 1000 / 60);
+setInterval(update, 1000 / 60);
 
 </script>
   <head>

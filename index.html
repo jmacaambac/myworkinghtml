@@ -90,8 +90,8 @@ body {
                translate3d(0, 0, 2rem);
 }
   </style>
-  <script>
-    const angle = 20;
+ <script>
+const angle = 20;
 const rotateCard = window;
 
 const lerp = (start, end, amount) => {
@@ -103,8 +103,10 @@ const remap = (value, oldMax, newMax) => {
     return Math.min(Math.max(newValue, -newMax), newMax);
 };
 
+let cards = [];
+
 window.addEventListener("DOMContentLoaded", (event) => {
-    const cards = document.querySelectorAll(".card");
+    cards = document.querySelectorAll(".card");
     cards.forEach((e) => {
         e.addEventListener("mousemove", (event) => {
             const rect = e.getBoundingClientRect();
@@ -127,20 +129,22 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 const update = () => {
     cards.forEach((e) => {
-        let currentX = parseFloat(e.style.getPropertyValue("--rotateY").slice(0, -1));
-        let currentY = parseFloat(e.style.getPropertyValue("--rotateX").slice(0, -1));
-        if (isNaN(currentX)) currentX = 0;
-        if (isNaN(currentY)) currentY = 0;
+        let currentX = parseFloat(e.style.getPropertyValue("--rotateY") || "0");
+        let currentY = parseFloat(e.style.getPropertyValue("--rotateX") || "0");
+
         const x = lerp(currentX, e.dataset.rotateX, 0.85);
         const y = lerp(currentY, e.dataset.rotateY, 0.85);
+
         e.style.setProperty("--rotateY", x + "deg");
         e.style.setProperty("--rotateX", y + "deg");
     });
 };
 
-setInterval(update, 1000 / 60);
+setInterval(() => {
+    if (cards.length > 0) update();
+}, 1000 / 60);
 
-  </script>
+</script>
   <head>
     
   </head>
